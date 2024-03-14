@@ -53,6 +53,6 @@ function wp_custome_taxonomy_product()
     );
 
     // product ~ post_type
-    // new name: product-cat
-    register_taxonomy('product-cat', ['product'], $args);
+    // new name: product_cat
+    register_taxonomy('product_cat', ['product'], $args);
 }
