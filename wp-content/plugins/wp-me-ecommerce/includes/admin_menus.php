@@ -40,7 +40,7 @@ function wp_admin_page_dashboard()
 
 function wp_admin_page_order()
 {
-    echo 'wp_admin_page_order';
+    include_once WP_ME_PATH . 'includes/admin_pages/orders.php';
 }
 
 function wp_admin_page_setting()
