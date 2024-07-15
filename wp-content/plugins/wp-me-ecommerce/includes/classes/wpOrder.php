@@ -22,8 +22,19 @@ class wpOrder
 
         $paged = 1;
 
+        $search = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
+        $status = isset($_REQUEST['status']) ? $_REQUEST['status'] : '';
+
         // Lấy tổng số records
-        $sql = "SELECT count(id) from $this->_orders";
+        $sql = "SELECT count(id) from $this->_orders WHERE deleted = 0";
+
+        if ($search) {
+            $sql .= " AND (customer_name LIKE '%$search%' OR customer_phone LIKE '%$search%')";
+        }
+
+        if ($status) {
+            $sql .= " AND status = '$status'";
+        }
 
         $total_items = $wpdb->get_var($sql);
 
@@ -37,9 +48,24 @@ class wpOrder
         $total_pages = ceil($total_items / $limit);
         $offset = ($paged * $limit) - $limit;
 
-        $sqlPaginate = "SELECT * from $this->_orders";
+        $sqlPaginate = "SELECT * from $this->_orders where deleted = 0";
+
+        if ($search) {
+            $sqlPaginate .= " AND (customer_name LIKE '%$search%' OR customer_phone LIKE '%$search%')";
+        }
+
+        if ($status) {
+            $sqlPaginate .= " AND status = '$status'";
+        }
+
         $sqlPaginate .= " ORDER BY id DESC";
         $sqlPaginate .= " LIMIT $limit OFFSET $offset";
+
+        return [
+            'total_items' => $total_items,
+            'total_pages' => $total_pages,
+            'items' => $wpdb->get_results($sqlPaginate)
+        ];
 
         return $wpdb->get_results($sqlPaginate);
     }
@@ -65,6 +91,16 @@ class wpOrder
     {
         global $wpdb;
         $wpdb->update($this->_orders, $data, [
+            'id' => $id
+        ]);
+
+        return true;
+    }
+
+    public function trash($id)
+    {
+        global $wpdb;
+        $wpdb->update($this->_orders, ['deleted' => 1], [
             'id' => $id
         ]);
 

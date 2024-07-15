@@ -6,6 +6,8 @@ include_once WP_ME_PATH . 'includes/post_types.php';
 // Đăng ký metaboxs
 include_once WP_ME_PATH . 'includes/metaboxes.php';
 
+include_once WP_ME_PATH . 'includes/functions.php';
+
 // Thêm các cột vào custom post_type và custom taxonomy
 include_once WP_ME_PATH . 'includes/admin_columns.php';
 
